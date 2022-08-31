@@ -1,0 +1,93 @@
+﻿@page "/measurements"
+@attribute [Authorize]
+
+<MudStack Row="true" Justify="Justify.Center">
+    <MudIcon Icon="@Icons.Material.Filled.MonitorHeart" Size="Size.Large" Class="mr-4"/>
+    <MudText Typo="Typo.h4" Align="Align.Center">MEASUREMENTS</MudText>
+</MudStack><PageTitle>Measurements</PageTitle>
+
+@if (!_measurements.Any())
+{
+    <MudStack Row="true" Justify="Justify.Center" Class="mt-15">
+        @if (_dataUpdated)
+        {
+            <MudPaper Elevation="3" Class="px-5 py-3">
+                <MudStack AlignItems="AlignItems.Center">
+                    <MudText Typo="Typo.h6" Align="Align.Center" Class="mb-2">@_measurementsResult.Message</MudText>
+                                <MudButton OnClick="(() => Save(0))" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.AddBox" Size="Size.Small">Add</MudButton>
+                </MudStack>
+            </MudPaper>
+        }
+        else
+        {
+            <MudText Typo="Typo.h6" Align="Align.Center">Loading patient measurements...</MudText>
+            <img src="/images/loading.gif" style="width: 30px; height: 30px" />
+        }
+    </MudStack>
+}
+else
+{
+<MudTabs Centered="true" Elevation="5" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6" Class="mt-3" style="height: 460px">
+    <MudTabPanel>
+        <TabContent>
+            <MudStack Row="true" Spacing="3" AlignItems="AlignItems.Center">
+                <MudIcon Icon="@Icons.Material.Filled.FormatListBulleted" />
+                <MudText Typo="Typo.h6">MEASUREMENTS&nbsp;&nbsp;LIST</MudText>
+            </MudStack>
+        </TabContent>
+        <ChildContent>
+            <MudStack Row="true" Justify="Justify.Center" Class="my-3">
+                <div style="width: 470px" class="pt-5">
+                    <MudDataGrid Items="@_measurements" Hover="true" Dense="true" RowsPerPage="5" Height="232px"
+                                    ReadOnly="false" FixedHeader="true" col>
+                        <Columns>
+                            <Column T="Measurement" Field="DateOnly" Title="Date" Sortable="false" />
+                            <Column T="Measurement" Field="TimeOnly" Title="Time" Sortable="false" />
+                            <Column T="Measurement" Field="SystolicDiastolic" Title="Syst.‌‌ | ‌‌Diast." Sortable="false" />
+                            <Column T="Measurement" Field="Pulse" Title="Pulse" Sortable="false"/>
+                            <Column T="Measurement" Sortable="false">
+                                <CellTemplate>
+                                    <MudStack Row="true">
+                                        <MudTooltip Text="Edit">
+                                            <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Edit"
+                                                OnClick="(() => Save(context.Item.Id))" />
+                                        </MudTooltip>
+                                        <MudTooltip Text="Delete">
+                                            <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Delete"
+                                                OnClick="(() => Delete(context.Item.Id, context.Item.DateOnly, context.Item.TimeOnly))" />
+                                        </MudTooltip>
+                                    </MudStack>
+                                </CellTemplate>
+                            </Column>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="Measurement" DisableRowsPerPage="true" />
+                        </PagerContent>
+                    </MudDataGrid>
+                    <MudStack Row="true" Justify="Justify.FlexEnd" Class="mt-3">
+                            <MudButton OnClick="(() => Save(0))" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.AddBox" Size="Size.Small">Add</MudButton>
+                    </MudStack>
+                </div>
+            </MudStack>
+        </ChildContent>
+    </MudTabPanel>
+    <MudTabPanel>
+        <TabContent>
+            <MudStack Row="true" Spacing="3" AlignItems="AlignItems.Center">
+                <MudIcon Icon="@Icons.Material.Filled.SsidChart" />
+                    <MudText Typo="Typo.h6">VIEW&nbsp;&nbsp;CHART</MudText>
+            </MudStack>
+        </TabContent>
+        <ChildContent>
+            <MudStack Row="true" Justify="Justify.Center">
+                <div>
+                    <MudChart ChartType="ChartType.Line" ChartSeries="@_chartSeries" LegendPosition="Position.Top"
+                               ChartOptions="(new ChartOptions() { XAxisLines = true, YAxisTicks = 10 })" 
+                               XAxisLabels="@_xAxisLabels" Width="100%" Height="330px" />
+                </div>
+            </MudStack>
+        </ChildContent>
+    </MudTabPanel>
+</MudTabs>
+}
+

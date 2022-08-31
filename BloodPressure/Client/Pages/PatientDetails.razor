@@ -1,0 +1,58 @@
+﻿@attribute [Authorize]
+
+@if (_patient != null)
+{
+    <PageTitle>Patient profile #@_patient.Id</PageTitle>
+    <MudGrid>
+        <MudItem>
+            <MudCard Outlined="true" style="min-width: 400px">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudStack Row="true" AlignItems="AlignItems.Center">
+                            <MudText Typo="Typo.h6">Patient profile: <b>#@_patient.Id</b></MudText>
+                            <MudSpacer />
+                            <MudIconButton aria-label="close" Icon="@Icons.Material.Filled.Close" OnClick="@(() => MudDialog.Cancel())"/>
+                        </MudStack>
+                        <MudDivider DividerType="DividerType.FullWidth" Class="mt-3" />
+                    </CardHeaderContent>
+                </MudCardHeader>
+                    <MudCardContent style="margin-top: -20px">
+                    <MudStack Row="true" Spacing="1" AlignItems="AlignItems.End">
+                        @if (_photoImage != null)
+                        {
+                            <div style="display: flex; justify-content: center; width: 130px">
+                                <img src="data:image/jpg;base64, @_photoImage" style="max-width: 130px; height: 130px" class="rounded-lg mt-8"/>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="display: flex; justify-content: center; width: 130px">
+                                <img src="images/default_@(_patient.Gender.ToLower()).png" style="max-width: 130px; height: 130px" class="rounded-lg mt-8"/>
+                            </div>
+                        }
+                        <div class="ml-5">
+                            <MudTextField Label="Identification card" style="width: 100px" ReadOnly="true" Value="_patient.IdentificationCard" />
+                            <MudTextField Label="First name" style="width: 150px" ReadOnly="true" Value="_patient.Firstname" Class="mt-3"/>
+                            <MudTextField Label="Last name" style="width: 200px" ReadOnly="true" Value="_patient.Lastname" Class="mt-3"/>
+                        </div>
+                    </MudStack>
+                    <MudStack Row="true" AlignItems="AlignItems.Baseline" Justify="Justify.FlexEnd" Style="width: 285px" Class="mt-2 ml-11">
+                        <MudTextField Label="Birth date" ReadOnly="true" Format="dd-MM-yyyy"
+                                    Value="_patient.BirthDate" style="width: 130px" />
+                        <MudTextField T="int" ReadOnly="true" Label="Age" style="width: 25px" Value="_patient.Age" />
+                        <MudTextField Label="Gender" style="width: 60px" ReadOnly="true" Value="@_patient.Gender" />
+                        <MudSelect T="char" @bind-Value="_patient.Role" Label="Role" AnchorOrigin="Origin.BottomCenter"
+                                    style="width: 80px" Margin="Margin.Dense" SelectedValuesChanged="@(() => _isDisabled = false)">
+                            <MudSelectItem Value="@('U')">User</MudSelectItem>
+                            <MudSelectItem Value="@('A')">Admin</MudSelectItem>
+                        </MudSelect>
+                    </MudStack>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveChanges" Class="ml-auto"
+                            StartIcon="@Icons.Material.Filled.Save" Disabled="@_isDisabled" Size="Size.Small">Update</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+}

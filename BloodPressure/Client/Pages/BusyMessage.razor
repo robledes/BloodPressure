@@ -1,0 +1,15 @@
+﻿
+<MudPaper Class="pa-5">
+    <MudStack Spacing="3" AlignItems="AlignItems.Center">
+        <div style="max-width: 300px; height: auto; font-size: 1.1em">
+            @Message
+        </div>
+        <div>
+            <img src="/images/loading.gif" style="width: 50px; height: 50px" />
+        </div>
+    </MudStack>
+</MudPaper>
+
+@code {
+    [Parameter] public string Message { get; set; }
+}

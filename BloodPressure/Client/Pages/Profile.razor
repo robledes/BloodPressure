@@ -1,0 +1,74 @@
+﻿@attribute [Authorize]
+
+<PageTitle>Patient profile #@_patientId</PageTitle>
+
+@if (_patient != null)
+{
+    <EditForm Model="@_patient" OnValidSubmit="SaveChanges">
+        <DataAnnotationsValidator />
+        <MudGrid>
+            <MudItem Class="d-flex align-center justify-center mud-width-full" xs="12">
+                <MudCard Outlined="true" style="min-width: 400px">
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudStack Row="true" AlignItems="AlignItems.Center">
+                                <MudText Typo="Typo.h6">Patient profile: <b>#@_patientId</b></MudText>
+                                <MudSpacer />
+                                <MudIconButton Icon="@Icons.Material.Filled.Close" OnClick="@(() => MudDialog.Cancel())"/>
+                            </MudStack>
+                            <MudDivider DividerType="DividerType.FullWidth" Class="mt-3" />
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                        <MudCardContent style="margin-top: -20px">
+                        <MudStack Row="true" Spacing="1" AlignItems="AlignItems.End">
+                            @if (_photoImage != null)
+                            {
+                                <div style="display: flex; justify-content: center; width: 130px">
+                                    <img src="data:image/jpg;base64, @_photoImage" style="max-width: 130px; height: 130px" class="rounded-lg mt-8"/>
+                                </div>
+                                <div>
+                                    <MudIconButton Icon="@Icons.Filled.NoPhotography" OnClick="(() => _photoImage = null)" Class="mr-3" style="height: 0px"/>
+                                </div>
+                            }
+                            else
+                            {
+                                <div style="display: flex; justify-content: center; width: 130px">
+                                    <img src="images/default_@(_patient.Gender.ToLower()).png" style="max-width: 130px; height: 130px" class="rounded-lg mt-8"/>
+                                </div>
+                                    <InputFile id="getPhoto" accept=".jpg,.jpeg,.png" OnChange="SelectPhoto" hidden />
+                                <div>
+                                    <MudIconButton HtmlTag="label" Icon="@Icons.Filled.PhotoCamera" for="getPhoto" Class="mr-3" style="height: 0px"/>
+                                </div>
+                            }
+                            <div>
+                                <MudTextField Label="Identification card" style="width: 100px" Mask="@_identificationCardMask" AutoFocus="true"
+                                                @bind-Value="_patient.IdentificationCard" For="@(() => _patient.IdentificationCard)" />
+                                <MudTextField Label="First name" style="width: 150px"
+                                                @bind-Value="_patient.Firstname" Class="mt-3"/>
+                                        <MudTextField Label="Last name" style="width: 200px"
+                                                @bind-Value="_patient.Lastname" Class="mt-3"/>
+                            </div>
+                        </MudStack>
+                        <MudStack Row="true" AlignItems="AlignItems.Baseline" Justify="Justify.FlexEnd" Style="width: 285px" Class="mt-2">
+                            <MudDatePicker Label="Birth date" Editable="true" Mask="@(new DateMask("dd-MM-yyyy"))" DateFormat="dd-MM-yyyy" MaxDate="DateTime.Today"
+                                            @bind-Date="_patient.BirthDate" For="@(() => _patient.BirthDate)" DisableToolbar="true" style="width: 130px" />
+                            <MudTextField Label="Age" ReadOnly="true" style="width: 25px" 
+                                            @bind-Value="_patient.Age" />
+                            <MudSelect T="char" @bind-Value="_patient.GenderCode" Label="Gender" AnchorOrigin="Origin.BottomCenter"
+                                            style="width: 80px" Margin="Margin.Dense">
+                                <MudSelectItem Value="@('M')">Male</MudSelectItem>
+                                <MudSelectItem Value="@('F')">Female</MudSelectItem>
+                            </MudSelect>
+                        </MudStack>
+                        </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="Delete"
+                            Class="ml-auto mr-2" StartIcon="@Icons.Material.Filled.Delete" Size="Size.Small">Delete</MudButton>
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary"
+                            StartIcon="@Icons.Material.Filled.Save" Size="Size.Small">Update</MudButton>
+                        </MudCardActions>
+                </MudCard>
+            </MudItem>
+        </MudGrid>
+    </EditForm>
+}

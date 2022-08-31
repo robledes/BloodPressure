@@ -1,0 +1,82 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme"/>
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="0" Dense="true">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Style="color:lightgray" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudSpacer />
+        <AuthorizeView>
+            <Authorized>
+                <MudText Typo="Typo.body1">Hi again, <em>@context.User.Identity.Name</em> !</MudText>
+                <MudMenu ActivationEvent="@MouseEvent.LeftClick" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Dense="true">
+                    <ActivatorContent>
+                        <MudTooltip Text="Patient options">
+                            <MudIconButton Icon="@Icons.Material.Filled.Person" Style="color:lightgray" Edge="Edge.End" />
+                        </MudTooltip>
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MudMenuItem OnTouch="Profile" OnClick="Profile">
+                            <MudStack Row="true" Spacing="3" AlignItems="AlignItems.Center">
+                                <MudIcon Icon="@Icons.Material.Filled.ContactPage" Size="Size.Small" />
+                                <MudText Typo="Typo.body1">Profile</MudText>
+                            </MudStack>
+                        </MudMenuItem>
+                        <MudMenuItem OnTouch="ChangePassword" OnClick="ChangePassword">
+                            <MudStack Row="true" Spacing="3" AlignItems="AlignItems.Center">
+                                <MudIcon Icon="@Icons.Material.Filled.Password" Size="Size.Small" />
+                                <MudText Typo="Typo.body1">Change pass</MudText>
+                            </MudStack>
+                        </MudMenuItem>
+                        <MudDivider />
+                        <MudMenuItem OnTouch="Logout" OnClick="Logout">
+                            <MudStack Row="true" Spacing="3" AlignItems="AlignItems.Center">
+                                <MudIcon Icon="@Icons.Material.Filled.Logout" Size="Size.Small" />
+                                <MudText Typo="Typo.body1">Logout</MudText>
+                            </MudStack>
+                        </MudMenuItem>
+                    </ChildContent>
+                </MudMenu>
+            </Authorized>
+            <NotAuthorized>
+                <MudMenu ActivationEvent="@MouseEvent.LeftClick" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Dense="true">
+                    <ActivatorContent>
+                        <MudTooltip Text="Authenticate">
+                            <MudIconButton Icon="@Icons.Material.Filled.PersonOff" Style="color:lightgray" Edge="Edge.End" />
+                        </MudTooltip>
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MudMenuItem OnTouch="Login" OnClick="Login">
+                            <MudStack Row="true" Spacing="3" AlignItems="AlignItems.Center">
+                                <MudIcon Icon="@Icons.Material.Filled.Login" Size="Size.Small" />
+                                <MudText Typo="Typo.body1">Login</MudText>
+                            </MudStack>
+                        </MudMenuItem>
+                        <MudMenuItem OnTouch="Register" OnClick="Register">
+                            <MudStack Row="true" Spacing="3" AlignItems="AlignItems.Center">
+                                <MudIcon Icon="@Icons.Material.Filled.EditNote" Size="Size.Small" />
+                                <MudText Typo="Typo.body1">Register</MudText>
+                            </MudStack>
+                        </MudMenuItem>
+                    </ChildContent>
+                </MudMenu>
+            </NotAuthorized>
+        </AuthorizeView>
+        <MudTooltip Text=@_lightDarkText>
+            <MudIconButton Icon="@_iconMode" Style="color:lightgray" Edge="Edge.End" OnClick="DarkToggle" />
+        </MudTooltip>
+    </MudAppBar>
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
+        <MudDrawerHeader>
+            <MudText Typo="Typo.h6">Blood Pressure</MudText>
+        </MudDrawerHeader>
+        <NavMenu />
+    </MudDrawer>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Large" Class="mt-5">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>

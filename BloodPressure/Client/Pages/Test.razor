@@ -1,0 +1,11 @@
+﻿@page "/test"
+@attribute [Authorize]
+
+<MudStack Row="true" Justify="Justify.Center">
+    <MudIcon Icon="@Icons.Material.Filled.Label" Size="Size.Large" Class="mr-4"/>
+    <MudText Typo="Typo.h4" Align="Align.Center">TEST PAGE</MudText>
+</MudStack>
+
+<MudStack Row="true" Justify="Justify.Center" Class="mt-10 mb-5">
+    <MudButton OnClick="Busy" Size="Size.Small" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Message">Show busy message</MudButton>
+</MudStack>

@@ -1,0 +1,44 @@
+﻿@inject NavigationManager? NavigationManager
+@inject IDialogService? DialogService
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <NotAuthorized>
+                    <MudText Typo="Typo.h5" Align="Align.Center">You are not allowed to see this page. ✋</MudText>
+                    <MudAlert Severity="Severity.Info" ContentAlignment="HorizontalAlignment.Center" Class="mt-5">
+                        <div style="font-size: large">
+                            Please<MudButton OnClick="Login" Size="Size.Small">login</MudButton>or<MudButton OnClick="Register" Size="Size.Small">register</MudButton>for a new account.
+                        </div>    
+                    </MudAlert>
+                </NotAuthorized>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <MudAlert Severity="Severity.Error"><MudText Typo="Typo.body1">There's nothing at this address.</MudText></MudAlert>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
+
+@code {
+
+    private readonly DialogOptions _dialogOptions = new()
+    {
+        CloseOnEscapeKey = true,
+        DisableBackdropClick = true,
+        CloseButton = false,
+        NoHeader = true
+    };
+
+    private void Login() => DialogService.Show<Login>(string.Empty, ReturnUrl(), _dialogOptions);
+
+    private void Register() => DialogService.Show<Register>(string.Empty, ReturnUrl(), _dialogOptions);
+
+    private DialogParameters? ReturnUrl()
+        => new() { ["ReturnUrl"] = NavigationManager.ToBaseRelativePath(NavigationManager.Uri) };
+}

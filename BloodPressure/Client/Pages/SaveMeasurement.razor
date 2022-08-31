@@ -1,0 +1,32 @@
+﻿<PageTitle>@_title</PageTitle>
+
+<EditForm Model="_measurement" OnValidSubmit="Save">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudItem Class="d-flex align-center justify-center mud-width-full" xs="12">
+            <MudCard Outlined="true" style="min-width: 250px">
+                <MudCardContent>
+                    <MudStack Row="true" AlignItems="AlignItems.Center">
+                        <MudText Typo="Typo.h6">@_title</MudText>
+                        <MudSpacer />
+                        <MudIconButton Icon="@Icons.Material.Filled.Close" OnClick="@(() => MudDialog.Cancel())"/>
+                    </MudStack>
+                    <MudDivider DividerType="DividerType.FullWidth" Class="mt-3" />
+                    <MudStack Row="true">
+                        <MudTextField Label="Systolic" HelperText="mmHg" style="width: 50px"
+                            @bind-Value="_measurement.Systolic" Class="mt-3" Mask="@(new PatternMask("000"))" AutoFocus="true"/>
+                        <MudTextField Label="Diastolic" HelperText="mmHg" style="width: 50px"
+                            @bind-Value="_measurement.Diastolic" Class="mt-3" Mask="@(new PatternMask("000"))"/>
+                        <MudTextField Label="Pulse" HelperText="/min" style="width: 50px"
+                            @bind-Value="_measurement.Pulse" Class="mt-3" Mask="@(new PatternMask("000"))"/>
+                    </MudStack>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"
+                            Disabled = "@((_measurement.Systolic.GetValueOrDefault()) == 0 || (_measurement.Diastolic.GetValueOrDefault()) == 0 || (_measurement.Pulse.GetValueOrDefault()) == 0)"
+                            Class="ml-auto" StartIcon="@Icons.Material.Filled.Save">Save</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</EditForm>
