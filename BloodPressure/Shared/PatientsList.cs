@@ -9,7 +9,7 @@ public class PatientsList
 
     public string Firstname { get; set; }
     public string Lastname { get; set; }
-    public string FullName => (Lastname + ", " + Firstname);
+    public string FullName => Lastname + ", " + Firstname;
 
     public char GenderCode { get; set; }
     public string Gender => GenderCode == 'M' ? "Male" : "Female";

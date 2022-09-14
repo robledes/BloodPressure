@@ -14,7 +14,7 @@ public partial class MainLayout
         {
             Default = new Default()
             {
-                FontFamily = new[] { "Baloo 2", "Century Gothic", "Helvetica", "Arial", "sans-serif" },
+                FontFamily = new[] { "Baloo 2", "Calibri" },
             }
         }
     };

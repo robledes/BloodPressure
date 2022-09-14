@@ -1,4 +1,6 @@
-﻿namespace BloodPressure.Client.Pages;
+﻿using Microsoft.AspNetCore.Components.Web;
+
+namespace BloodPressure.Client.Pages;
 
 partial class Login
 {
