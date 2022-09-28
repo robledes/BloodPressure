@@ -2,46 +2,51 @@
 
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Components.Authorization
-@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <h3>ClaimsPrincipal Data</h3>
 
 <button @onclick="GetClaimsPrincipalData">Get ClaimsPrincipal Data</button>
-
-<p>@authMessage</p>
-
-@if (claims.Count() > 0)
+<br />
+<br />
+<p>@_authMessage</p>
+<br />
+@if (_claims.Count() > 0)
 {
     <ul>
-        @foreach (var claim in claims)
+        @foreach (Claim? claim in _claims)
         {
             <li>@claim.Type: @claim.Value</li>
         }
     </ul>
 }
-
-<p>@surnameMessage</p>
+<br />
+<p>Name: @_name</p>
+<p>Expires: @_expires</p>
+<p>Now: @DateTime.Now</p>
 
 @code {
-    private string authMessage;
-    private string surnameMessage;
-    private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
+    
+    [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+    
+    private string _authMessage;
+    private string? _name;
+    private DateTime _expires;
+
+    private IEnumerable<Claim> _claims = Enumerable.Empty<Claim>();
 
     private async Task GetClaimsPrincipalData()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
+        AuthenticationState? authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        ClaimsPrincipal? user = authState.User;
 
         if (user.Identity.IsAuthenticated)
         {
-            authMessage = $"{user.Identity.Name} is authenticated.";
-            claims = user.Claims;
-            surnameMessage = 
-                $"Surname: {user.FindFirst(c => c.Type == ClaimTypes.Surname)?.Value}";
+            _authMessage = $"{user.Identity.Name} is authenticated.";
+            _claims = user.Claims;
+            _name = user.FindFirst(c => c.Type == ClaimTypes.Name)?.Value;
+            _expires = DateTime.Parse("1970-01-01").AddSeconds(int.Parse(_claims.FirstOrDefault(c => c.Type == "exp").Value)).ToLocalTime();
         }
         else
-        {
-            authMessage = "The user is NOT authenticated.";
-        }
+            _authMessage = "The user is NOT authenticated.";
     }
 }

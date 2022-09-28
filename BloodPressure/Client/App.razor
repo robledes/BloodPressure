@@ -6,15 +6,14 @@
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
                 <NotAuthorized>
-                    <MudText Typo="Typo.h5" Align="Align.Center">You are not allowed to see this page. ✋</MudText>
-                    <MudAlert Severity="Severity.Info" ContentAlignment="HorizontalAlignment.Center" Class="mt-5">
-                        <div style="font-size: large">
-                            Please
-                            <MudButton OnClick="Login" Size="Size.Small">login</MudButton>
-                            or
-                            <MudButton OnClick="Register" Size="Size.Small">register</MudButton>
-                            for a new account.
-                        </div>    
+                    <MudAlert NoIcon Severity="Severity.Info" ContentAlignment="HorizontalAlignment.Center" Class="mt-5">
+                        <span style="text-align: center">
+                            <MudText Typo="Typo.h6">✋ You are not allowed to access this page. ✋</MudText>
+                            <MudText Typo="Typo.h6">
+                                Please <button @onclick="Login"><b><u>login</u></b></button> or
+                                <button @onclick="Register"><b><u>register</u></b></button> for a new account.
+                            </MudText>
+                        </span>
                     </MudAlert>
                 </NotAuthorized>
             </AuthorizeRouteView>
@@ -23,7 +22,9 @@
         <NotFound>
             <PageTitle>Not found</PageTitle>
             <LayoutView Layout="@typeof(MainLayout)">
-                <MudAlert Severity="Severity.Error"><MudText Typo="Typo.body1">There's nothing at this address.</MudText></MudAlert>
+                <MudAlert NoIcon Severity="Severity.Info" ContentAlignment="HorizontalAlignment.Center" Class="mt-5">
+                    <MudText Typo="Typo.h6">⛔ This address does not exist. ⛔</MudText>
+                </MudAlert>
             </LayoutView>
         </NotFound>
     </Router>

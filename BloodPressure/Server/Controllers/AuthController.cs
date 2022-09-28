@@ -20,19 +20,19 @@ namespace BloodPressure.Server.Controllers
         public async Task<ActionResult<ServiceResponse<Patient>>> Get(int id)
             => Ok(await _authService.Get(id));
 
-        [HttpGet("getall"), Authorize]
+        [HttpGet("[action]"), Authorize]
         public async Task<ActionResult<ServiceResponse<IEnumerable<PatientsList>>>> GetAll()
             => Ok(await _authService.GetAll());
 
-        [HttpGet("getphoto"), Authorize]
+        [HttpGet("[action]"), Authorize]
         public async Task<ActionResult<ServiceResponse<Photo>>> GetPhoto()
             => Ok(await _authService.GetPhoto(GetPatientId()));
 
-        [HttpGet("getphoto/{id}"), Authorize]
+        [HttpGet("[action]/{id}"), Authorize]
         public async Task<ActionResult<ServiceResponse<Photo>>> GetPhoto(int id)
             => Ok(await _authService.GetPhoto(id));
 
-        [HttpPost("register")]
+        [HttpPost("[action]")]
         public async Task<ActionResult<ServiceResponse<int>>> Register(UserRegister request)
         {
             ServiceResponse<int>? response = await _authService.Register(
@@ -53,7 +53,7 @@ namespace BloodPressure.Server.Controllers
             return Ok(response);
         }
 
-        [HttpPost("insertphoto"), Authorize]
+        [HttpPost("[action]"), Authorize]
         public async Task<ActionResult<ServiceResponse<bool>>> InsertPhoto(Photo request)
         {
             ServiceResponse<bool>? response = await _authService.InsertPhoto(
@@ -84,7 +84,7 @@ namespace BloodPressure.Server.Controllers
             return Ok(response);
         }
 
-        [HttpPut("updatephoto"), Authorize]
+        [HttpPut("[action]"), Authorize]
         public async Task<ActionResult<ServiceResponse<bool>>> UpdatePhoto(Photo request)
         {
             ServiceResponse<bool>? response = await _authService.UpdatePhoto(
@@ -101,11 +101,11 @@ namespace BloodPressure.Server.Controllers
         public async Task<ActionResult<ServiceResponse<bool>>> Delete()
             => Ok(await _authService.Delete(GetPatientId()));
 
-        [HttpDelete("deletephoto"), Authorize]
+        [HttpDelete("[action]"), Authorize]
         public async Task<ActionResult<ServiceResponse<bool>>> DeletePhoto() 
             => Ok(await _authService.DeletePhoto(GetPatientId()));
 
-        [HttpPost("login")]
+        [HttpPost("[action]")]
         public async Task<ActionResult<ServiceResponse<string>>> Login(UserLogin request)
             => Ok(await _authService.Login(request.IdentificationCard, request.Password));
 

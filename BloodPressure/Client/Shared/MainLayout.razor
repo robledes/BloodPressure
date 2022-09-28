@@ -10,7 +10,7 @@
         <MudSpacer />
         <AuthorizeView>
             <Authorized>
-                <MudText Typo="Typo.body1">Hi again, <em>@context.User.Identity.Name</em> !</MudText>
+                <MudText Typo="Typo.body1"><b>@context.User.Identity.Name</b> is logged in.</MudText>
                 <MudMenu ActivationEvent="@MouseEvent.LeftClick" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Dense="true">
                     <ActivatorContent>
                         <MudTooltip Text="Patient options">
@@ -31,7 +31,7 @@
                             </MudStack>
                         </MudMenuItem>
                         <MudDivider />
-                        <MudMenuItem OnTouch="Logout" OnClick="Logout">
+                        <MudMenuItem OnTouch="Logout" OnClick="@Logout">
                             <MudStack Row="true" Spacing="3" AlignItems="AlignItems.Center">
                                 <MudIcon Icon="@Icons.Material.Filled.Logout" Size="Size.Small" />
                                 <MudText Typo="Typo.body1">Logout</MudText>
@@ -69,9 +69,11 @@
         </MudTooltip>
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
-        <MudDrawerHeader>
-            <MudText Typo="Typo.h6">Blood Pressure</MudText>
-        </MudDrawerHeader>
+        <MudStack AlignItems="AlignItems.Center">
+            <MudDrawerHeader>
+                <MudText Typo="Typo.h6">Blood Pressure</MudText>
+            </MudDrawerHeader>
+        </MudStack>
         <NavMenu />
     </MudDrawer>
     <MudMainContent>

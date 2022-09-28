@@ -1,11 +1,17 @@
-﻿namespace BloodPressure.Client.Pages;
+﻿using System.Security.Claims;
+
+namespace BloodPressure.Client.Pages;
 
 public partial class Measurements
 {
     [Inject] private IMeasurementService MeasurementService { get; set; }
-    [Inject] private IDialogService? DialogService { get; set; }
+    [Inject] private IDialogService DialogService { get; set; }
+    [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+    [Inject] private ISyncLocalStorageService LocalStorage { get; set; }
+    [Inject] private NavigationManager NavigationManager { get; set; }
+    [Inject] private ISnackbar Snackbar { get; set; }
 
-    private IEnumerable<Measurement>? _measurements;
+    private IEnumerable<Measurement>? _measurements = Enumerable.Empty<Measurement>();
     private ServiceResponse<IEnumerable<Measurement>> _measurementsResult;
     private bool _dataUpdated;
 
@@ -21,7 +27,11 @@ public partial class Measurements
         NoHeader = true
     };
 
-    protected override async Task OnInitializedAsync() => await UpdateList();
+    protected override async Task OnInitializedAsync()
+    {
+        if (!await TokenExpired())
+            await UpdateList();
+    }
 
     private async Task Save(int id)
     {
@@ -46,7 +56,7 @@ public partial class Measurements
     private async Task UpdateList()
     {
         _dataUpdated = false;
-        _measurements = new List<Measurement>();
+        _measurements = Enumerable.Empty<Measurement>();
         _measurementsResult = await MeasurementService.GetAll();
 
         if (_measurementsResult.Success)
@@ -99,6 +109,31 @@ public partial class Measurements
             new ChartSeries() { Name = _chartSeriesName[1], Data = chartSeriesDiastolic },
             new ChartSeries() { Name = _chartSeriesName[2], Data = chartSeriesPulse }
         };
+    }
+
+    private async Task<bool> TokenExpired()
+    {
+        AuthenticationState? authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        IEnumerable<Claim> _claims = authState.User.Claims;
+
+        DateTime _tokenExpiryDate = DateTime.Parse("1970-01-01").AddSeconds(int.Parse
+            (_claims.FirstOrDefault(c => c.Type == "exp").Value)).ToLocalTime();
+
+        if (DateTime.Now > _tokenExpiryDate)
+        {
+            Snackbar.Add(
+                Helpers.MsgFormat("Authentication is expired.", "Please login again."),
+                Severity.Warning,
+                config => { config.Icon = Icons.Outlined.Login; }
+            );
+
+            LocalStorage.RemoveItem("authToken");
+            await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            NavigationManager.NavigateTo("");
+            return true;
+        }
+
+        return false;
     }
 }
 

@@ -1,4 +1,6 @@
-﻿namespace BloodPressure.Shared;
+﻿using System;
+
+namespace BloodPressure.Shared;
 
 public class PatientsList
 {
@@ -9,7 +11,14 @@ public class PatientsList
 
     public string Firstname { get; set; }
     public string Lastname { get; set; }
-    public string FullName => Lastname + ", " + Firstname;
+    public string FullName
+    {
+        get
+        {
+            string fullName = Lastname + ", " + Firstname;
+            return fullName.Length > 25 ? string.Concat(fullName.AsSpan(0, 25), "...") : fullName;
+        }
+    }
 
     public char GenderCode { get; set; }
     public string Gender => GenderCode == 'M' ? "Male" : "Female";

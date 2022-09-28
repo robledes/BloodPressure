@@ -1,3 +1,5 @@
+using System.Security.Claims;
+
 namespace BloodPressure.Client.Shared;
 
 public partial class MainLayout
@@ -32,11 +34,12 @@ public partial class MainLayout
         NoHeader = true
     };
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         _isDarkMode = LocalStorage.GetItem<bool>("isDarkMode");
         _lightDarkText = _isDarkMode ? "Light mode" : "Dark mode";
         SetIconMode();
+        await TokenExpired();
     }
 
     private void DrawerToggle() => _drawerOpen = !_drawerOpen;
@@ -56,7 +59,7 @@ public partial class MainLayout
         LocalStorage.RemoveItem("authToken");
         await AuthenticationStateProvider.GetAuthenticationStateAsync();
         NavigationManager.NavigateTo("");
-        
+
         Snackbar.Add(
             "You have successfully logged out.",
             Severity.Success,
@@ -74,4 +77,25 @@ public partial class MainLayout
 
     private DialogParameters? ReturnUrl()
         => new() { ["ReturnUrl"] = NavigationManager.ToBaseRelativePath(NavigationManager.Uri) };
+
+    private async Task TokenExpired()
+    {
+        AuthenticationState? authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        ClaimsPrincipal? user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            IEnumerable<Claim> _claims = authState.User.Claims;
+
+            DateTime _tokenExpiryDate = DateTime.Parse("1970-01-01").AddSeconds(int.Parse
+                (_claims.FirstOrDefault(c => c.Type == "exp").Value)).ToLocalTime();
+
+            if (DateTime.Now > _tokenExpiryDate)
+            {
+                LocalStorage.RemoveItem("authToken");
+                await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                NavigationManager.NavigateTo("", forceLoad: true);
+            }
+        }
+    }
 }

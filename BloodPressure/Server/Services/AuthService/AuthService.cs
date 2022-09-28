@@ -136,7 +136,7 @@ public class AuthService : IAuthService
 
         JwtSecurityToken token = new(
             claims: claims,
-            expires: DateTime.Now.AddDays(1),
+            expires: DateTime.UtcNow.AddHours(8),
             signingCredentials: creds);
 
         return new ServiceResponse<string> 

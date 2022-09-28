@@ -1,7 +1,4 @@
-﻿using BloodPressure.Client.Pages;
-using Dapper;
-
-namespace BloodPressure.Server.Services.MeasurementService;
+﻿namespace BloodPressure.Server.Services.MeasurementService;
 
 public class MeasurementService : IMeasurementService
 {

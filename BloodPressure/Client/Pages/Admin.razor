@@ -2,9 +2,11 @@
 
 @if (!_currentUser.IsInRole("A"))
 {
-    <MudAlert Severity="Severity.Warning" ContentAlignment="HorizontalAlignment.Center" Class="mt-10">
-        <div style="font-size: large">This page can only be accessed by administrators. ✋</div>
-        <div style="font-size: large">Please<MudButton OnClick="HandleLogin" Size="Size.Small">login</MudButton>as administrator to continue.</div>
+    <MudAlert NoIcon Severity="Severity.Info" ContentAlignment="HorizontalAlignment.Center" Class="mt-5">
+        <span style="text-align: center">
+            <MudText Typo="Typo.h6">✋ This page can only be accessed by administrators. ✋</MudText>
+            <MudText Typo="Typo.h6">Please <button @onclick="HandleLogin"><b><u>login</u></b></button> as administrator to continue.</MudText>
+        </span>
     </MudAlert>
 }
 else
@@ -23,38 +25,40 @@ else
     }
     else
     {
-        <MudGrid>
-            <MudItem Class="mx-auto pa-6">
-                <MudPaper Elevation="3" Width="600px" Class="mt-8">
-                    <MudStack Row="true">
-                        <MudText Typo="Typo.h6" Class="ma-4">Patients list</MudText>
-                        <MudSpacer />
-                        <div style="width: 300px; margin-top: -10px; margin-right: 20px;">
-                            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true" 
-                                AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" />
-                        </div>
-                    </MudStack>
-                    <MudDataGrid Items="@_patientsList" Hover="true" Dense="true" RowsPerPage="5" Height="234px"
-                                   ReadOnly="false" FixedHeader="true" QuickFilter="@QuickFilter">
-                        <Columns>
-                            <Column T="PatientsList" Field="StrId" Title="Id" Sortable="false" />
-                            <Column T="PatientsList" Field="IdentificationCard" Title="Id Card" Sortable="false" />
-                            <Column T="PatientsList" Field="FullName" Title="Patient name" />
-                            <Column T="PatientsList" Field="Age" Sortable="false"/>
-                            <Column T="PatientsList" Sortable="false">
-                                <CellTemplate>
-                                    <MudTooltip Text="View profile">
-                                        <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.PersonSearch" OnClick="() => ViewPatientDetails(context.Item.Id)" />
-                                    </MudTooltip>
-                                </CellTemplate>
-                            </Column>
-                        </Columns>
-                        <PagerContent>
-                            <MudDataGridPager T="PatientsList" DisableRowsPerPage="true" />
-                        </PagerContent>
-                    </MudDataGrid>
-                </MudPaper>
-            </MudItem>
-        </MudGrid>
+        <MudStack Justify="Justify.Center" AlignItems="AlignItems.Center" Style="height: 80vh">
+            <MudGrid>
+                <MudItem Class="mx-auto pa-6">
+                    <MudPaper Elevation="3" Width="600px">
+                        <MudStack Row="true">
+                            <MudText Typo="Typo.h6" Class="ma-4">Patients list</MudText>
+                            <MudSpacer />
+                            <div style="width: 300px; margin-top: -10px; margin-right: 20px;">
+                                <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true" 
+                                    AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" />
+                            </div>
+                        </MudStack>
+                        <MudDataGrid Items="@_patientsList" Hover="true" Dense="true" RowsPerPage="5" Height="234px"
+                                       ReadOnly="false" FixedHeader="true" QuickFilter="@QuickFilter">
+                            <Columns>
+                                <Column T="PatientsList" Field="StrId" Title="Id" Sortable="false" />
+                                <Column T="PatientsList" Field="IdentificationCard" Title="Id Card" Sortable="false" />
+                                <Column T="PatientsList" Field="FullName" Title="Patient name" />
+                                <Column T="PatientsList" Field="Age" Sortable="false"/>
+                                <Column T="PatientsList" Sortable="false">
+                                    <CellTemplate>
+                                        <MudTooltip Text="View profile">
+                                            <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.PersonSearch" OnClick="() => ViewPatientDetails(context.Item.Id)" />
+                                        </MudTooltip>
+                                    </CellTemplate>
+                                </Column>
+                            </Columns>
+                            <PagerContent>
+                                <MudDataGridPager T="PatientsList" DisableRowsPerPage="true" />
+                            </PagerContent>
+                        </MudDataGrid>
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
+        </MudStack>
     }
 }
